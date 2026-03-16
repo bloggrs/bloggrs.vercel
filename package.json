@@ -9,7 +9,7 @@
     "dev": "nodemon src/app --ignore src/libs/api-docs/swagger.json",
     "dev-mac": "node_modules/nodemon/bin/nodemon.js src/app --ignore src/libs/api-docs/swagger.json",
     "start": "node src/app",
-    "postinstall": "prisma generate"
+    "postinstall": "npx prisma generate"
 
   },
   "keywords": [],
