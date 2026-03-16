@@ -2,67 +2,67 @@ generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
+
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model blogcategories {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique(map: "name") @db.VarChar(255)
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String    @unique(map: "blogcategories_name") @db.VarChar(255)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   blogs     blogs[]
 }
 
 model blogthemes {
-  id        Int      @id @default(autoincrement())
-  name             String   @unique(map: "name") @db.VarChar(255)
-  description      String   @db.VarChar(255)
-  image_url        String   @db.VarChar(255)
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
-  blogs     blogs[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique(map: "blogthemes_name") @db.VarChar(255)
+  description String    @db.VarChar(255)
+  image_url   String    @db.VarChar(255)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @default(now())
+  blogs       blogs[]
 }
 
 model blogcontacts {
-  id         Int      @id @default(autoincrement())
-  first_name String   @db.VarChar(255)
-  last_name  String   @db.VarChar(255)
-  email      String   @db.VarChar(255)
-  content    String   @db.MediumText
-  createdAt  DateTime? @db.DateTime(0) @default(now())
-  updatedAt  DateTime? @db.DateTime(0) @default(now())
+  id         Int       @id @default(autoincrement())
+  first_name String    @db.VarChar(255)
+  last_name  String    @db.VarChar(255)
+  email      String    @db.VarChar(255)
+  content    String    @db.Text
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @default(now())
   BlogId     Int
-  blogs      blogs    @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "blogcontacts_ibfk_1")
+  blogs      blogs     @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "blogcontacts_ibfk_1")
 
-  @@index([BlogId], map: "BlogId")
+  @@index([BlogId], map: "blogcontacts_blogid_idx")
 }
 
 model blogpostcategories {
-  createdAt  DateTime?     @db.DateTime(0) @default(now())
-  updatedAt  DateTime?     @db.DateTime(0) @default(now())
+  createdAt  DateTime?  @default(now())
+  updatedAt  DateTime?  @default(now())
   CategoryId Int
   BlogId     Int
   blogs      blogs      @relation(fields: [BlogId], references: [id], onDelete: Cascade, map: "blogpostcategories_ibfk_2")
   categories categories @relation(fields: [CategoryId], references: [id], onDelete: Cascade, map: "blogpostcategories_ibfk_1")
 
   @@id([CategoryId, BlogId])
-  @@index([BlogId], map: "BlogId")
+  @@index([BlogId], map: "blogpostcategories_blogid_idx")
 }
 
 model blogs {
   id                 Int                  @id @default(autoincrement())
   name               String               @db.VarChar(255)
-  description        String               @db.LongText
+  description        String
   logo_url           String               @db.VarChar(255)
-  createdAt          DateTime?             @db.DateTime(0) @default(now())
-  updatedAt          DateTime?             @db.DateTime(0) @default(now())
+  createdAt          DateTime?            @default(now())
+  updatedAt          DateTime?            @default(now())
   UserId             Int
   BlogCategoryId     Int
-  BlogThemeId     Int
+  BlogThemeId        Int
   blogcategories     blogcategories       @relation(fields: [BlogCategoryId], references: [id], onDelete: NoAction, map: "blogs_ibfk_2")
-  blogthemes     blogthemes       @relation(fields: [BlogThemeId], references: [id], onDelete: NoAction, map: "blogs_ibfk_3")
+  blogthemes         blogthemes           @relation(fields: [BlogThemeId], references: [id], onDelete: NoAction, map: "blogs_ibfk_3")
   users              users                @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "blogs_ibfk_1")
   blogcontacts       blogcontacts[]
   blogpostcategories blogpostcategories[]
@@ -73,83 +73,83 @@ model blogs {
   publickeys         publickeys[]
   teammembers        teammembers[]
 
-  @@index([BlogThemeId], map: "BlogThemeId")
-  @@index([BlogCategoryId], map: "BlogCategoryId")
-  @@index([UserId], map: "UserId")
+  @@index([BlogThemeId], map: "blogs_blogthemeid_idx")
+  @@index([BlogCategoryId], map: "blogs_blogcategoryid_idx")
+  @@index([UserId], map: "blogs_userid_idx")
 }
 
 model categories {
   id                 Int                  @id @default(autoincrement())
-  name               String               @unique(map: "name") @db.VarChar(255)
-  slug               String               @unique(map: "slug") @db.VarChar(255)
-  createdAt          DateTime?             @db.DateTime(0) @default(now())
-  updatedAt          DateTime?             @db.DateTime(0) @default(now())
+  name               String               @unique(map: "categories_name") @db.VarChar(255)
+  slug               String               @unique(map: "categories_slug") @db.VarChar(255)
+  createdAt          DateTime?            @default(now())
+  updatedAt          DateTime?            @default(now())
   blogpostcategories blogpostcategories[]
   postcategories     postcategories[]
 }
 
 model pages {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  slug      String   @db.VarChar(255)
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  slug      String    @db.VarChar(255)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   BlogId    Int
   UserId    Int
-  blogs     blogs    @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "pages_ibfk_1")
-  users     users    @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "pages_ibfk_2")
+  blogs     blogs     @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "pages_ibfk_1")
+  users     users     @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "pages_ibfk_2")
 
-  @@index([BlogId], map: "BlogId")
-  @@index([UserId], map: "UserId")
+  @@index([BlogId], map: "pages_blogid_idx")
+  @@index([UserId], map: "pages_userid_idx")
 }
 
 model postcategories {
-  createdAt  DateTime?   @db.DateTime(0) @default(now())
-  updatedAt  DateTime?   @db.DateTime(0) @default(now())
+  createdAt  DateTime?  @default(now())
+  updatedAt  DateTime?  @default(now())
   CategoryId Int
   PostId     Int
   categories categories @relation(fields: [CategoryId], references: [id], onDelete: Cascade, map: "postcategories_ibfk_1")
   posts      posts      @relation(fields: [PostId], references: [id], onDelete: Cascade, map: "postcategories_ibfk_2")
 
   @@id([CategoryId, PostId])
-  @@index([PostId], map: "PostId")
+  @@index([PostId], map: "postcategories_postid_idx")
 }
 
 model postcomments {
-  id        Int      @id @default(autoincrement())
-  content   String   @db.MediumText
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        Int       @id @default(autoincrement())
+  content   String    @db.Text
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   PostId    Int?
   UserId    Int
-  posts     posts?   @relation(fields: [PostId], references: [id], map: "postcomments_ibfk_1")
-  users     users    @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "postcomments_ibfk_2")
+  posts     posts?    @relation(fields: [PostId], references: [id], map: "postcomments_ibfk_1")
+  users     users     @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "postcomments_ibfk_2")
 
-  @@index([PostId], map: "PostId")
-  @@index([UserId], map: "UserId")
+  @@index([PostId], map: "postcomments_postid_idx")
+  @@index([UserId], map: "postcomments_userid_idx")
 }
 
 model postlikes {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   PostId    Int?
   UserId    Int
-  posts     posts?   @relation(fields: [PostId], references: [id], map: "postlikes_ibfk_1")
-  users     users    @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "postlikes_ibfk_2")
+  posts     posts?    @relation(fields: [PostId], references: [id], map: "postlikes_ibfk_1")
+  users     users     @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "postlikes_ibfk_2")
 
-  @@index([PostId], map: "PostId")
-  @@index([UserId], map: "UserId")
+  @@index([PostId], map: "postlikes_postid_idx")
+  @@index([UserId], map: "postlikes_userid_idx")
 }
 
 model posts {
   id             Int              @id @default(autoincrement())
   title          String           @db.VarChar(255)
   slug           String           @db.VarChar(255)
-  html_content   String           @db.LongText
+  html_content   String
   status         posts_status     @default(DRAFT)
-  createdAt      DateTime?         @db.DateTime(0) @default(now())
-  updatedAt      DateTime?         @db.DateTime(0) @default(now())
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @default(now())
   BlogId         Int
   UserId         Int
   blogs          blogs            @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "posts_ibfk_1")
@@ -158,66 +158,66 @@ model posts {
   postcomments   postcomments[]
   postlikes      postlikes[]
 
-  @@index([BlogId], map: "BlogId")
-  @@index([UserId], map: "UserId")
+  @@index([BlogId], map: "posts_blogid_idx")
+  @@index([UserId], map: "posts_userid_idx")
 }
 
 model referrals {
   id        Int             @id @default(autoincrement())
   type      referrals_type?
-  createdAt DateTime?        @db.DateTime(0) @default(now())
-  updatedAt DateTime?        @db.DateTime(0) @default(now())
+  createdAt DateTime?       @default(now())
+  updatedAt DateTime?       @default(now())
   BlogId    Int?
   UserId    Int
   blogs     blogs?          @relation(fields: [BlogId], references: [id], map: "referrals_ibfk_1")
   users     users           @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "referrals_ibfk_2")
 
-  @@index([BlogId], map: "BlogId")
-  @@index([UserId], map: "UserId")
+  @@index([BlogId], map: "referrals_blogid_idx")
+  @@index([UserId], map: "referrals_userid_idx")
 }
 
 model secretkeys {
-  id        String   @id @db.Char(36)
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        String    @id @db.Char(36)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   BlogId    Int
-  blogs     blogs    @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "secretkeys_ibfk_1")
+  blogs     blogs     @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "secretkeys_ibfk_1")
 
-  @@index([BlogId], map: "BlogId")
+  @@index([BlogId], map: "secretkeys_blogid_idx")
 }
 
 model publickeys {
-  id        String   @id @db.Char(36)
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        String    @id @db.Char(36)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   BlogId    Int
-  blogs     blogs    @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "publickeys_ibfk_1")
+  blogs     blogs     @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "publickeys_ibfk_1")
 
-  @@index([BlogId], map: "BlogId")
+  @@index([BlogId], map: "publickeys_blogid_idx")
 }
 
 model teammembers {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime? @db.DateTime(0) @default(now())
-  updatedAt DateTime? @db.DateTime(0) @default(now())
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
   UserId    Int
   BlogId    Int
-  blogs     blogs    @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "teammembers_ibfk_2")
-  users     users    @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "teammembers_ibfk_1")
+  blogs     blogs     @relation(fields: [BlogId], references: [id], onDelete: NoAction, map: "teammembers_ibfk_2")
+  users     users     @relation(fields: [UserId], references: [id], onDelete: NoAction, map: "teammembers_ibfk_1")
 
-  @@index([BlogId], map: "BlogId")
-  @@index([UserId], map: "UserId")
+  @@index([BlogId], map: "teammembers_blogid_idx")
+  @@index([UserId], map: "teammembers_userid_idx")
 }
 
 model users {
   id           Int            @id @default(autoincrement())
-  email        String         @unique(map: "email") @db.VarChar(255)
+  email        String         @unique(map: "users_email") @db.VarChar(255)
   password     String         @db.VarChar(255)
   first_name   String         @db.VarChar(255)
   last_name    String         @db.VarChar(255)
   isGuest      Boolean
-  createdAt    DateTime?       @db.DateTime(0) @default(now())
-  updatedAt    DateTime?       @db.DateTime(0) @default(now())
+  createdAt    DateTime?      @default(now())
+  updatedAt    DateTime?      @default(now())
   blogs        blogs[]
   pages        pages[]
   postcomments postcomments[]
