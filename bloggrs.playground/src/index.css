@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  --platform-bridge-accent: #ff9900;
+  --platform-bridge-accent-soft: rgba(255, 153, 0, 0.18);
+  --platform-bridge-info: #2563eb;
+  --platform-bridge-surface: rgba(7, 16, 27, 0.94);
+  --platform-bridge-panel: rgba(255, 255, 255, 0.05);
+  --platform-bridge-border: rgba(148, 163, 184, 0.16);
+  --platform-bridge-text: #dbe7f4;
+  --platform-bridge-muted: #95a8bf;
+  --font-body: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-display: 'Sora', 'Space Grotesk', sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, monospace;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--platform-bridge-text);
+  background: #07101b;
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 153, 0, 0.14), transparent 22%),
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 24%),
+    linear-gradient(180deg, #07101b 0%, #0b1624 52%, #0e1828 100%);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(255, 153, 0, 0.3);
+  color: #fff7ed;
+}
